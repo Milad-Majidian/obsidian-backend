@@ -1,0 +1,47 @@
+import Product, {IProduct} from "../models/product.model";
+
+export const createProduct = async (data:Partial<IProduct>) => {
+    return await Product.create(data); 
+}
+
+export const getProductById = async (id: string) => {
+    return await Product.findById(id);
+}
+
+export const getAllProducts = async () => {
+    return await Product.find();
+};
+
+export const updateProduct = async (id: string, data: Partial<IProduct>) => {
+    return await Product.findByIdAndUpdate(id, data, { new: true });
+};
+
+export const deleteProduct = async (id: string) => {
+    return await Product.findByIdAndDelete(id);
+};
+
+
+// class ProductService {
+//     async createProduct(productData: IProduct): Promise<IProduct> {
+//         const product = new Product(productData);
+//         return await product.save();
+//     }
+
+//     async getProductById(productId: string): Promise<IProduct | null> {
+//         return await Product.findById(productId);
+//     }
+
+//     async getAllProducts(): Promise<IProduct[]> {
+//         return await Product.find();
+//     }
+
+//     async updateProduct(productId: string, productData: Partial<IProduct>): Promise<IProduct | null> {
+//         return await Product.findByIdAndUpdate(productId, productData, { new: true });
+//     }
+
+//     async deleteProduct(productId: string): Promise<IProduct | null> {
+//         return await Product.findByIdAndDelete(productId);
+//     }
+// }
+
+// export default new ProductService();
