@@ -1,6 +1,6 @@
-import Product, {IProduct} from "../models/product.model";
+import Product, {IProduct} from "../../shared/models/product.model";
 
-export const createProduct = async (data:Partial<IProduct>) => {
+export const addProduct = async (data:Partial<IProduct>) => {
     return await Product.create(data); 
 }
 
@@ -22,7 +22,7 @@ export const deleteProduct = async (id: string) => {
 
 
 // class ProductService {
-//     async createProduct(productData: IProduct): Promise<IProduct> {
+//     async addProduct(productData: IProduct): Promise<IProduct> {
 //         const product = new Product(productData);
 //         return await product.save();
 //     }
