@@ -4,20 +4,23 @@ import { v4 as uuidv4 } from 'uuid';
 
 export interface IProduct extends Document {
     name :string ;
-    productId: string;
+    id: string;
     price: number;
+    category: { 
+        id: string;
+        name: string;
+    };
     description: string;
-    category: string;
 }
 
 
 const ProductSchema = new Schema<IProduct>({
     name: { type: String, required: true },
-    productId: { type: String, default: uuidv4, unique: true },
+    id: { type: String, default: uuidv4, unique: true },
     price: { type: Number, required: true },
     description: { type: String, required: true },
-    category: { type: String, required: true },
-},{
+    category: { type: String, ref: 'Category', required: true },
+}, {
     timestamps: true,
 })
 

@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import productRoutes from './website/routes/product.routes';
+import categoryRoutes from './website/routes/category.routes'
 
 dotenv.config();
 
@@ -11,13 +12,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/categories",categoryRoutes)
 app.use("/api/products", productRoutes);
-
-// Test route
-app.get('/api/test', (req, res) => {
-  console.log('✅ Test route hit');
-  res.status(200).json({ message: 'Test successful' });
-});
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mydatabase';
 

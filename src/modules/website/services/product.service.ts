@@ -5,7 +5,7 @@ export const addProduct = async (data:Partial<IProduct>) => {
 }
 
 export const getProductById = async (id: string) => {
-    return await Product.findById(id);
+    return await Product.findOne({id});
 }
 
 export const getAllProducts = async () => {
@@ -13,11 +13,11 @@ export const getAllProducts = async () => {
 };
 
 export const updateProduct = async (id: string, data: Partial<IProduct>) => {
-    return await Product.findByIdAndUpdate(id, data, { new: true });
+    return await Product.findOneAndUpdate({ id }, data, { new: true });
 };
 
 export const deleteProduct = async (id: string) => {
-    return await Product.findByIdAndDelete(id);
+    return await Product.findOneAndDelete({ id });
 };
 
 
