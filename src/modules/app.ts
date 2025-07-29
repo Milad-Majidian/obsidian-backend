@@ -1,11 +1,10 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import productRoutes from './website/routes/product.routes';
 import categoryRoutes from './website/routes/category.routes'
+import authRoutes from './website/routes/auth.routes';
 
-dotenv.config();
 
 const app = express();
 
@@ -14,6 +13,7 @@ app.use(express.json());
 
 app.use("/api/categories",categoryRoutes)
 app.use("/api/products", productRoutes);
+app.use('/api/auth', authRoutes);
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mydatabase';
 
