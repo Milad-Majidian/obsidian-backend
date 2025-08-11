@@ -8,8 +8,8 @@ if (!accessTokenSecret || !refreshTokenSecret) {
   throw new Error('Access or Refresh token secret is not defined in environment variables');
 }
 
-const accessTokenExpiresIn = (process.env.ACCESS_TOKEN_EXPIRATION_IN ?? '1h') as StringValue;
-const refreshTokenExpiresIn = (process.env.REFRESH_TOKEN_EXPIRATION_IN ?? '7d') as StringValue;
+const accessTokenExpiresIn = (process.env.ACCESS_TOKEN_EXPIRATION_IN ?? process.env.ACCESS_TOKEN_EXPIRES_IN) as StringValue;
+const refreshTokenExpiresIn = (process.env.REFRESH_TOKEN_EXPIRATION_IN ?? process.env.REFRESH_TOKEN_EXPIRES_IN) as StringValue;
 
 export const generateAccessToken = (userId: string): string =>
   jwt.sign({ userId }, accessTokenSecret, { expiresIn: accessTokenExpiresIn });

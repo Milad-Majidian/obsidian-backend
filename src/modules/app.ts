@@ -5,15 +5,20 @@ import productRoutes from './website/routes/product.routes';
 import categoryRoutes from './website/routes/category.routes'
 import authRoutes from './website/routes/auth.routes';
 
+var cookieParser = require('cookie-parser')
 
 const app = express();
+app.use(cookieParser());
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // 👈 Your frontend URL
+  credentials: true, // if you're using cookies
+}));
 app.use(express.json());
 
-app.use("/api/categories",categoryRoutes)
-app.use("/api/products", productRoutes);
-app.use('/api/auth', authRoutes);
+app.use("/categories",categoryRoutes)
+app.use("/products", productRoutes);
+app.use('/auth', authRoutes);
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mydatabase';
 
