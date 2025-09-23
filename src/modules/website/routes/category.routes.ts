@@ -5,7 +5,7 @@ import * as categoryController from '@/modules/website/controllers/category.cont
 const router = express.Router()
 
 router.post('/', categoryController.addCategory)
-router.get('/:id', categoryController.getCategoryById)
+router.get('/:slug', categoryController.getCategoryBySlug)
 router.get('/',categoryController.getAllCategories)
 router.put('/:id', categoryController.updateCategory)
 router.delete('/:id',categoryController.deleteCategory)

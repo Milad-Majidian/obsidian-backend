@@ -5,6 +5,7 @@ import * as productController  from '@/modules/website/controllers/product.contr
 const router = express.Router()
 
 router.post('/', productController.addProduct)
+router.get("/", productController.getProducts);
 router.get('/:id', productController.getProductById)
 router.get('/', productController.getAllProducts)
 router.put('/:id', productController.updateProduct)

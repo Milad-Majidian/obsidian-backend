@@ -3,6 +3,23 @@ import { ApiError } from '@/modules/shared/utils/apiError';
 import { asyncHandler } from '@/modules/shared/utils/asyncHandler';
 import Category, { ICategory } from '@/modules/shared/models/category.model';
 
+export const getAllCategories = asyncHandler(async (req: Request, res: Response) => {
+    const categories = await Category.find();
+    res.status(200).json({ success: true, data: categories });
+});
+
+export const getCategoryBySlug = asyncHandler(async (req: Request, res: Response) => {
+    const categorySlug = req.params.slug;
+    if (!categorySlug) {
+        throw new ApiError(400, 'Category slug is required');
+    }
+    console.log('category',categorySlug)
+    const category = await Category.findOne({ slug: categorySlug });
+    if (!category) {
+        throw new ApiError(404, 'Category not found');
+    }
+    res.status(200).json({ success: true, data: category });
+});
 
 export const addCategory = asyncHandler(async (req: Request, res: Response) => {
     const categoryData = req.body;
@@ -13,25 +30,8 @@ export const addCategory = asyncHandler(async (req: Request, res: Response) => {
     res.status(201).json({ success: true, data: category });
 });
 
-export const getCategoryById = asyncHandler(async (req: Request, res: Response) => {
-    const categoryId = req.params.id;
-    if (!categoryId) {
-        throw new ApiError(400, 'Category ID is required');
-    }
-    const category = await Category.findById(categoryId);
-    if (!category) {
-        throw new ApiError(404, 'Category not found');
-    }
-    res.status(200).json({ success: true, data: category });
-});
-
-export const getAllCategories = asyncHandler(async (req: Request, res: Response) => {
-    const categories = await Category.find();
-    res.status(200).json({ success: true, data: categories });
-});
-
 export const updateCategory = asyncHandler(async (req: Request, res: Response) => {
-    const categoryId = req.params.id;
+    const categoryId = req.params.id
     const categoryData: Partial<ICategory> = req.body;
     if (!categoryId) {
         throw new ApiError(400, 'Category ID is required');
@@ -44,7 +44,7 @@ export const updateCategory = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const deleteCategory = asyncHandler(async (req: Request, res: Response) => {
-    const categoryId = req.params.id;
+    const categoryId = req.params.id;   
     if (!categoryId) {
         throw new ApiError(400, 'Category ID is required');
     }

@@ -2,6 +2,7 @@ import {Request , Response} from 'express';
 import { ApiError } from '@/modules/shared/utils/apiError';
 import { asyncHandler } from '@/modules/shared/utils/asyncHandler';
 import Product , { IProduct } from '@/modules/shared/models/product.model';
+import Category from '@/modules/shared/models/category.model';
 
 export const addProduct = asyncHandler(async (req: Request, res: Response) => {
     const productData = req.body;
@@ -11,6 +12,64 @@ export const addProduct = asyncHandler(async (req: Request, res: Response) => {
         throw new ApiError(400, 'Product creation failed');
     }
     res.status(201).json({ success: true, data: product });
+});
+
+export const getProducts = asyncHandler(async (req: Request, res: Response) => {
+  const {
+    category, // slug
+    brand,
+    price_min,
+    price_max,
+    page = 1,
+    limit = 10,
+    sort_by = "createdAt",
+    order = "desc",
+  } = req.query;
+
+  const filters: any = {};
+
+  // category filter (find by slug → get category name → find products by category name)
+  if (category) {
+    const cat = await Category.findOne({ name: category });
+    if (!cat) {
+      throw new ApiError(404, "Category not found");
+    }
+    filters.category = cat._id;
+  }
+
+  // brand filter
+  if (brand) filters.brand = brand;
+
+  // price filter
+  if (price_min || price_max) {
+    filters.price = {};
+    if (price_min) filters.price.$gte = Number(price_min);
+    if (price_max) filters.price.$lte = Number(price_max);
+  }
+
+  // pagination
+  const skip = (Number(page) - 1) * Number(limit);
+
+  // sorting
+  const sort: any = { [String(sort_by)]: order === "asc" ? 1 : -1 };
+
+  const products = await Product.find(filters)
+    .skip(skip)
+    .limit(Number(limit))
+    .sort(sort);
+
+  const total = await Product.countDocuments(filters);
+
+  res.status(200).json({
+    success: true,
+    data: products,
+    pagination: {
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      totalPages: Math.ceil(total / Number(limit)),
+    },
+  });
 });
 
 export const getProductById = asyncHandler(async (req: Request, res: Response) => {
