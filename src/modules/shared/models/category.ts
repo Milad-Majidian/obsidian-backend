@@ -5,18 +5,15 @@ export interface ICategory extends Document {
     name: string;
     description?: string;
     image: string;
-    createdAt: Date;
-    updateAt: Date;
 }
 
 const CategorySchema = new Schema<ICategory>({
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     description: { type: String, required: false },
-    image: {type: String, required: true},
-    createdAt: {type:Date, required: true},
-    updateAt: { type: Date, required: true }
+    image: {type: String, required: false},
 }, {
     timestamps: true,
+    versionKey: false
 });
 
  const Category = mongoose.model<ICategory>("Category", CategorySchema);

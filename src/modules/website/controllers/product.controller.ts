@@ -1,8 +1,8 @@
 import {Request , Response} from 'express';
 import { ApiError } from '@/modules/shared/utils/apiError';
 import { asyncHandler } from '@/modules/shared/utils/asyncHandler';
-import Product , { IProduct } from '@/modules/shared/models/product.model';
-import Category from '@/modules/shared/models/category.model';
+import Product , { IProduct } from '@/modules/shared/models/product';
+import Category from '@/modules/shared/models/category';
 
 export const addProduct = asyncHandler(async (req: Request, res: Response) => {
     const productData = req.body;

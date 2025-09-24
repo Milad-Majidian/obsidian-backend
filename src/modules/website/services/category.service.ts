@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import Category , {ICategory} from "@/modules/shared/models/category.model";
+import Category , {ICategory} from "@/modules/shared/models/category";
 
 
 export const addCategory = async (data: Partial<ICategory>) => {
