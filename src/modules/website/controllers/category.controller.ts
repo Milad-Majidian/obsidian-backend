@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
 import { ApiError } from '@/modules/shared/utils/apiError';
 import { asyncHandler } from '@/modules/shared/utils/asyncHandler';
-import Category, { ICategory } from '@/modules/shared/models/category';
+import Category, { ICategory } from '@/modules/shared/models/category.model';
 
 export const getAllCategories = asyncHandler(async (req: Request, res: Response) => {
     const categories = await Category.find();

@@ -10,6 +10,9 @@ export interface IProduct extends Document {
         id: string;
         name: string;
     };
+    brand:{
+        name: string;
+    }
     description: string;
 }
 
@@ -20,6 +23,7 @@ const ProductSchema = new Schema<IProduct>({
     price: { type: Number, required: true },
     description: { type: String, required: true },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+    brand: { type: String , required: true }
 }, {
     timestamps: true,
     versionKey: false

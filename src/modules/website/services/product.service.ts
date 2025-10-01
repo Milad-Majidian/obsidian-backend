@@ -1,4 +1,4 @@
-import Product, {IProduct} from "../../shared/models/product";
+import Product, {IProduct} from "../../shared/models/product.model";
 
 export const addProduct = async (data:Partial<IProduct>) => {
     return await Product.create(data); 

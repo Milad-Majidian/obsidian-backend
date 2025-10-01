@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import productRoutes from './website/routes/product.routes';
 import categoryRoutes from './website/routes/category.routes'
+import brandRoutes from "./website/routes/brand.routes"
 import authRoutes from './website/routes/auth.routes';
 
 var cookieParser = require('cookie-parser')
@@ -17,6 +18,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use("/categories",categoryRoutes)
+app.use("/brands",brandRoutes)
 app.use("/products", productRoutes);
 app.use('/auth', authRoutes);
 

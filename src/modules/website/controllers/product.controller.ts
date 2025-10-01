@@ -1,8 +1,9 @@
 import {Request , Response} from 'express';
 import { ApiError } from '@/modules/shared/utils/apiError';
 import { asyncHandler } from '@/modules/shared/utils/asyncHandler';
-import Product , { IProduct } from '@/modules/shared/models/product';
-import Category from '@/modules/shared/models/category';
+import Product , { IProduct } from '@/modules/shared/models/product.model';
+import Category from '@/modules/shared/models/category.model';
+import Brand from '@/modules/shared/models/brand.model';
 
 export const addProduct = asyncHandler(async (req: Request, res: Response) => {
     const productData = req.body;
@@ -28,7 +29,7 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
 
   const filters: any = {};
 
-  // category filter (find by slug → get category name → find products by category name)
+  // find category by slug or category name then add category id to filters)
   if (category) {
     const cat = await Category.findOne({ name: category });
     if (!cat) {
@@ -37,8 +38,11 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     filters.category = cat._id;
   }
 
-  // brand filter
-  if (brand) filters.brand = brand;
+  // find brand by brand name then add brand id to filters
+    
+  if(brand){
+    filters.brand = brand;
+  }
 
   // price filter
   if (price_min || price_max) {
@@ -53,10 +57,12 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   // sorting
   const sort: any = { [String(sort_by)]: order === "asc" ? 1 : -1 };
 
+
   const products = await Product.find(filters)
     .skip(skip)
     .limit(Number(limit))
     .sort(sort);
+
 
   const total = await Product.countDocuments(filters);
 

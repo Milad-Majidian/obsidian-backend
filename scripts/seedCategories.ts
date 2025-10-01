@@ -1,7 +1,7 @@
 // src/scripts/seedCategories.ts
 
 import { connectToDb } from "@/config/db";
-import Category from "@/modules/shared/models/category";
+import Category from "@/modules/shared/models/category.model";
 
 export const categories = [
       { name: "Laptops", description: "Portable computers", image: "/images/laptops.png" },
