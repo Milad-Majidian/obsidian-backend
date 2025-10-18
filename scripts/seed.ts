@@ -12,29 +12,12 @@ async function seed() {
     await Category.deleteMany({});
     await Product.deleteMany({});
 
-    const electronicsBrand = await Brand.create(
-        { name: "apple", description: "Apple Inc.", image: "" },
-        {name: "lenovo", description: "Lenovo Group Limited", image: ""},
-        {name: "dell", description: "Dell Technologies", image: ""},
-        {name: "samsung", description: "Samsung Electronics", image: ""},
-        {name: "google", description: "Google LLC", image: ""
-        }
-    );
-    const furnitureBrand = await Brand.create(
-        {name: "ikea", description: "Ikea Furniture", image: ""},
-        {name: "ashley", description: "Ashley Furniture", image: ""},
-        {name: "wayfair", description: "Wayfair Inc.", image: ""},
-        {name:  "west-elm", description: "West Elm Furniture", image: ""},
-        {name: "rugs-usa", description: "Rugs USA", image: ""}
-    );
-    console.log("Brand seeded ✅");
-
     // Insert categories
-    const categories = await Category.create([
+    const categories = await Category.insertMany([
       { name: "laptops", description: "Portable computers", image: "" },
       {
         name: "phones",
-        description: "Cozy rugs",
+        description: "Smartphones and mobile devices",
         image: "",
       },
       { name: "chairs", description: "Comfortable seating", image: "" },
@@ -51,7 +34,45 @@ async function seed() {
       } 
     ]);
 
+    const categoryMap = Object.fromEntries(categories.map(c => [c.name, c.id]));
+
     console.log("Categories seeded ✅");
+
+     const electronicsBrand = await Brand.create(
+        { name: "apple", description: "Apple Inc.", image: "",
+            categories: [categoryMap["laptops"], categoryMap["phones"]]
+        },
+        {name: "lenovo", description: "Lenovo Group Limited", image: "",
+            categories: [categoryMap["laptops"], categoryMap["phones"]]
+        },
+        {name: "asus", description: "AsusTek Computer Inc.", image: "",
+            categories: [categoryMap["laptops"], categoryMap["phones"]]
+        },
+        {name: "samsung", description: "Samsung Electronics", image: "",
+            categories: [categoryMap["laptops"], categoryMap["phones"]]
+        },
+        {name: "google", description: "Google LLC", image: "",
+            categories: [categoryMap["phones"]]
+        }
+    );
+    const furnitureBrand = await Brand.create(
+        {name: "ikea", description: "Ikea Furniture", image: "",
+            categories: [categoryMap["chairs"], categoryMap["tables"], categoryMap["sofas"], categoryMap["rugs"]]
+        },
+        {name: "ashley", description: "Ashley Furniture", image: "",
+            categories: [categoryMap["chairs"], categoryMap["tables"], categoryMap["sofas"], categoryMap["rugs"]]
+        },
+        {name: "wayfair", description: "Wayfair Inc.", image: "",
+            categories: [categoryMap["chairs"], categoryMap["tables"], categoryMap["sofas"], categoryMap["rugs"]]
+        },
+        {name:  "west-elm", description: "West Elm Furniture", image: "",
+            categories: [categoryMap["chairs"], categoryMap["tables"], categoryMap["sofas"], categoryMap["rugs"]]
+        },
+        {name: "rugs-usa", description: "Rugs USA", image: "",
+            categories: [categoryMap["chairs"], categoryMap["tables"], categoryMap["sofas"], categoryMap["rugs"]]
+        }
+    );
+    console.log("Brand seeded ✅");
 
     // Insert products with category references
     await Product.create([
