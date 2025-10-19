@@ -12,7 +12,7 @@ async function seed() {
     await Product.deleteMany({});
 
     // Insert categories
-    const categories = await Category.insertMany([
+    const categories = await Category.create([
       { name: "laptops", description: "Portable computers", image: "" },
       {
         name: "phones",

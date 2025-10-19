@@ -8,8 +8,8 @@ export interface IProduct extends Document {
     name :string ;
     image: String,
     price: number;
-    brand: Types.ObjectId | ICategory,
-    category: Types.ObjectId | IBrand ,
+    brand: Types.ObjectId | IBrand ,
+    category: Types.ObjectId |  ICategory,
     description: string;
 }
 
@@ -19,7 +19,7 @@ const ProductSchema = new Schema<IProduct>({
     image: { type: String, required: true },
     price: { type: Number, required: true },
     description: { type: String, required: true },
-    brand: { type: mongoose.Schema.Types.ObjectId , ref: 'brand' ,required: true },
+    brand: { type: mongoose.Schema.Types.ObjectId , ref: 'Brand' ,required: true },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
 }, {
     timestamps: true,

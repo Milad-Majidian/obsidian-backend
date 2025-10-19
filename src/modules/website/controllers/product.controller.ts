@@ -30,18 +30,18 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   const filters: any = {};
 
   // find category by slug or category name then add category id to filters)
+  
   if (category) {
     const cat = await Category.findOne({ name: category });
-    if (!cat) {
-      throw new ApiError(404, "Category not found");
-    }
+    if (!cat) throw new ApiError(404, "Category not found");
     filters.category = cat._id;
   }
-
   // find brand by brand name then add brand id to filters
     
   if(brand){
-    filters.brand = brand;
+    const brandDoc = await Brand.findOne({ name: brand })
+    if(!brandDoc) throw new ApiError(404,"Brand not found")
+    filters.brand = brandDoc._id;
   }
 
   // price filter
@@ -57,11 +57,17 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   // sorting
   const sort: any = { [String(sort_by)]: order === "asc" ? 1 : -1 };
 
+  console.log("filters:", filters);
 
   const products = await Product.find(filters)
-    .skip(skip)
+   .populate("brand category")
+    .sort({ [sort_by as string]: order === "desc" ? -1 : 1 })
     .limit(Number(limit))
-    .sort(sort);
+    .skip((Number(page) - 1) * Number(limit));
+  // .populate("brand category")
+  //   .skip(skip)
+  //   .limit(Number(limit))
+  //   .sort(sort);
 
 
   const total = await Product.countDocuments(filters);
