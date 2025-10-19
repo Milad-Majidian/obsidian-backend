@@ -22,7 +22,7 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     price_min,
     price_max,
     page = 1,
-    limit = 10,
+    limit = 30,
     sort_by = "createdAt",
     order = "desc",
   } = req.query;

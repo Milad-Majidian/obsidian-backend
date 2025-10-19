@@ -1,4 +1,3 @@
-
 import Category from "../src/modules/shared/models/category.model";
 import Product from "../src/modules/shared/models/product.model";
 import { connectToDb } from "../src/config/db";
@@ -25,213 +24,173 @@ async function seed() {
       {
         name: "sofas",
         description: "Comfortable sofas",
-        image: ""
+        image: "",
       },
       {
         name: "rugs",
         description: "Cozy rugs",
-        image: ""
-      } 
+        image: "",
+      },
     ]);
 
-    const categoryMap = Object.fromEntries(categories.map(c => [c.name, c.id]));
+    const categoryMap = Object.fromEntries(
+      categories.map((c) => [c.name, c.id])
+    );
 
     console.log("Categories seeded ✅");
 
-     const electronicsBrand = await Brand.create(
-        { name: "apple", description: "Apple Inc.", image: "",
-            categories: [categoryMap["laptops"], categoryMap["phones"]]
-        },
-        {name: "lenovo", description: "Lenovo Group Limited", image: "",
-            categories: [categoryMap["laptops"], categoryMap["phones"]]
-        },
-        {name: "asus", description: "AsusTek Computer Inc.", image: "",
-            categories: [categoryMap["laptops"], categoryMap["phones"]]
-        },
-        {name: "samsung", description: "Samsung Electronics", image: "",
-            categories: [categoryMap["laptops"], categoryMap["phones"]]
-        },
-        {name: "google", description: "Google LLC", image: "",
-            categories: [categoryMap["phones"]]
-        }
+    const electronicsBrand = await Brand.create(
+      {
+        name: "apple",
+        description: "Apple Inc.",
+        image: "",
+        categories: [categoryMap["laptops"], categoryMap["phones"]],
+      },
+      {
+        name: "lenovo",
+        description: "Lenovo Group Limited",
+        image: "",
+        categories: [categoryMap["laptops"], categoryMap["phones"]],
+      },
+      {
+        name: "asus",
+        description: "AsusTek Computer Inc.",
+        image: "",
+        categories: [categoryMap["laptops"], categoryMap["phones"]],
+      },
+      {
+        name: "samsung",
+        description: "Samsung Electronics",
+        image: "",
+        categories: [categoryMap["laptops"], categoryMap["phones"]],
+      },
+      {
+        name: "google",
+        description: "Google LLC",
+        image: "",
+        categories: [categoryMap["phones"]],
+      }
     );
     const furnitureBrand = await Brand.create(
-        {name: "ikea", description: "Ikea Furniture", image: "",
-            categories: [categoryMap["chairs"], categoryMap["tables"], categoryMap["sofas"], categoryMap["rugs"]]
-        },
-        {name: "ashley", description: "Ashley Furniture", image: "",
-            categories: [categoryMap["chairs"], categoryMap["tables"], categoryMap["sofas"], categoryMap["rugs"]]
-        },
-        {name: "wayfair", description: "Wayfair Inc.", image: "",
-            categories: [categoryMap["chairs"], categoryMap["tables"], categoryMap["sofas"], categoryMap["rugs"]]
-        },
-        {name:  "west-elm", description: "West Elm Furniture", image: "",
-            categories: [categoryMap["chairs"], categoryMap["tables"], categoryMap["sofas"], categoryMap["rugs"]]
-        },
-        {name: "rugs-usa", description: "Rugs USA", image: "",
-            categories: [categoryMap["chairs"], categoryMap["tables"], categoryMap["sofas"], categoryMap["rugs"]]
-        }
+      {
+        name: "ikea",
+        description: "Ikea Furniture",
+        image: "",
+        categories: [
+          categoryMap["chairs"],
+          categoryMap["tables"],
+          categoryMap["sofas"],
+          categoryMap["rugs"],
+        ],
+      },
+      {
+        name: "ashley",
+        description: "Ashley Furniture",
+        image: "",
+        categories: [
+          categoryMap["chairs"],
+          categoryMap["tables"],
+          categoryMap["sofas"],
+          categoryMap["rugs"],
+        ],
+      },
+      {
+        name: "wayfair",
+        description: "Wayfair Inc.",
+        image: "",
+        categories: [
+          categoryMap["chairs"],
+          categoryMap["tables"],
+          categoryMap["sofas"],
+          categoryMap["rugs"],
+        ],
+      },
+      {
+        name: "west-elm",
+        description: "West Elm Furniture",
+        image: "",
+        categories: [
+          categoryMap["chairs"],
+          categoryMap["tables"],
+          categoryMap["sofas"],
+          categoryMap["rugs"],
+        ],
+      },
+      {
+        name: "rugs-usa",
+        description: "Rugs USA",
+        image: "",
+        categories: [
+          categoryMap["chairs"],
+          categoryMap["tables"],
+          categoryMap["sofas"],
+          categoryMap["rugs"],
+        ],
+      }
     );
     console.log("Brand seeded ✅");
 
-    // Insert products with category references
+    const PER_CATEGORY = 30;
+
     await Product.create([
-        // Laptops
-        { 
-            name: "MacBook Pro 16",
-            description: "Apple laptop",
-            price: 2500,
-            image: "/categories/product-placeholder.png",
-            brand: electronicsBrand[0].name,
-            category: categories[0]._id
-        },
-        {
-            name: "Dell XPS 13",
-            description: "Compact and powerful laptop",
-            price: 1200,
-            image: "/categories/product-placeholder.png",
-            brand: electronicsBrand[2].name,
-            category: categories[0]._id
-        },
-        {
-            name: "Lenovo ThinkPad X1",
-            description: "Business-class laptop",
-            price: 1400,
-            image: "/categories/product-placeholder.png",
-            brand: electronicsBrand[1].name,
-            category: categories[0]._id
-        },
-
-        // Phones
-        {
-            name: "iPhone 14 Pro",
-            description: "Latest Apple smartphone",
-            price: 999,
-            image: "/categories/product-placeholder.png",
-            brand: electronicsBrand[0].name,
-            category: categories[1]._id
-        },
-        {
-            name: "Samsung Galaxy S23",
-            description: "Flagship Android phone",
-            price: 899,
-            image: "/categories/product-placeholder.png",
-            brand: electronicsBrand[3].name,
-            category: categories[1]._id
-        },
-        {
-            name: "Google Pixel 7",
-            description: "Google's latest phone",
-            price: 799,
-            image: "/categories/product-placeholder.png",
-            brand: electronicsBrand[4].name,
-            category: categories[1]._id
-        },
-
-        // Chairs
-        {
-            name: "Office Chair",
-            description: "Ergonomic chair",
-            price: 200,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[0].name,
-            category: categories[2]._id
-        },
-        {
-            name: "Gaming Chair",
-            description: "High-end gaming chair",
-            price: 300,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[1].name,
-            category: categories[2]._id
-        },
-        {
-            name: "Dining Chair",
-            description: "Comfortable dining chair",
-            price: 120,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[2].name,
-            category: categories[2]._id
-        },
-
-        // Tables
-        {
-            name: "Dining Table",
-            description: "Wooden dining table",
-            price: 500,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[3].name,
-            category: categories[3]._id
-        },
-        {
-            name: "Coffee Table",
-            description: "Stylish coffee table",
-            price: 150,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[4].name,
-            category: categories[3]._id
-        },
-        {
-            name: "Gaming Desk",
-            description: "Ergonomic gaming desk",
-            price: 400,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[1].name,
-            category: categories[3]._id
-        },
-
-        // Sofas
-        {
-            name: "Leather Sofa",
-            description: "Luxury leather sofa",
-            price: 1200,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[0].name,
-            category: categories[4]._id
-        },
-        {
-            name: "Fabric Sofa",
-            description: "Comfortable fabric sofa",
-            price: 800,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[2].name,
-            category: categories[4]._id
-        },
-        {
-            name: "Sectional Sofa",
-            description: "Spacious sectional sofa",
-            price: 1500,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[3].name,
-            category: categories[4]._id
-        },
-
-        // Rugs
-        {
-            name: "Persian Rug",
-            description: "Handmade Persian rug",
-            price: 600,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[4].name,
-            category: categories[5]._id
-        },
-        {
-            name: "Shaggy Rug",
-            description: "Soft shaggy rug",
-            price: 250,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[0].name,
-            category: categories[5]._id
-        },
-        {
-            name: "Outdoor Rug",
-            description: "Durable outdoor rug",
-            price: 180,
-            image: "/categories/product-placeholder.png",
-            brand: furnitureBrand[2].name,
-            category: categories[5]._id
-        }
-    ]);   console.log("Products seeded ✅");
+      // Laptops
+    // NOTE: Seeding more products doesn't change per-page results.
+    // Increase your API/UI page size (e.g., ?limit=50) to show more than 10 per page.
+    ...Array.from({ length: PER_CATEGORY }, (_, i) => ({
+      name: `Laptop Model ${String(i + 1).padStart(3, "0")}`,
+      description: `Bulk laptop item ${i + 1}`,
+      price: 800 + (i % 20) * 25,
+      image: "/categories/product-placeholder.png",
+      brand: electronicsBrand[i % electronicsBrand.length]!._id,
+      category: categories.find((c) => c.name === "laptops")!._id,
+    })),
+      // Phones
+      ...Array.from({ length: PER_CATEGORY }, (_, i) => ({
+        name: `Phone Model ${String(i + 1).padStart(3, "0")}`,
+        description: `Bulk phone item ${i + 1}`,
+        price: 300 + (i % 20) * 20,
+        image: "/categories/product-placeholder.png",
+        brand: electronicsBrand[i % electronicsBrand.length]!._id,
+        category: categories.find((c) => c.name === "phones")!._id,
+      })),
+      // Chairs
+      ...Array.from({ length: PER_CATEGORY }, (_, i) => ({
+        name: `Chair Model ${String(i + 1).padStart(3, "0")}`,
+        description: `Bulk chair item ${i + 1}`,
+        price: 80 + (i % 20) * 5,
+        image: "/categories/product-placeholder.png",
+        brand: furnitureBrand[i % furnitureBrand.length]!._id,
+        category: categories.find((c) => c.name === "chairs")!._id,
+      })),
+      // Tables
+      ...Array.from({ length: PER_CATEGORY }, (_, i) => ({
+        name: `Table Model ${String(i + 1).padStart(3, "0")}`,
+        description: `Bulk table item ${i + 1}`,
+        price: 120 + (i % 20) * 15,
+        image: "/categories/product-placeholder.png",
+        brand: furnitureBrand[i % furnitureBrand.length]!._id,
+        category: categories.find((c) => c.name === "tables")!._id,
+      })),
+      // Sofas
+      ...Array.from({ length: PER_CATEGORY }, (_, i) => ({
+        name: `Sofa Model ${String(i + 1).padStart(3, "0")}`,
+        description: `Bulk sofa item ${i + 1}`,
+        price: 400 + (i % 20) * 50,
+        image: "/categories/product-placeholder.png",
+        brand: furnitureBrand[i % furnitureBrand.length]!._id,
+        category: categories.find((c) => c.name === "sofas")!._id,
+      })),
+      // Rugs
+      ...Array.from({ length: PER_CATEGORY }, (_, i) => ({
+        name: `Rug Model ${String(i + 1).padStart(3, "0")}`,
+        description: `Bulk rug item ${i + 1}`,
+        price: 60 + (i % 20) * 10,
+        image: "/categories/product-placeholder.png",
+        brand: furnitureBrand[i % furnitureBrand.length]!._id,
+        category: categories.find((c) => c.name === "rugs")!._id,
+      })),
+    ]);
+    console.log("Products seeded ✅");
 
     process.exit();
   } catch (err) {
@@ -241,4 +200,3 @@ async function seed() {
 }
 
 seed();
-
