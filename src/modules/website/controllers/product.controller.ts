@@ -32,14 +32,18 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   // find category by slug or category name then add category id to filters)
   
   if (category) {
-    const cat = await Category.findOne({ name: category });
+    const cat = await Category.findOne({ 
+        name : category
+    });
     if (!cat) throw new ApiError(404, "Category not found");
     filters.category = cat._id;
   }
   // find brand by brand name then add brand id to filters
     
   if(brand){
-    const brandDoc = await Brand.findOne({ name: brand })
+    const brandDoc = await Brand.findOne({ 
+      name: brand
+    })
     if(!brandDoc) throw new ApiError(404,"Brand not found")
     filters.brand = brandDoc._id;
   }
@@ -52,34 +56,33 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   }
 
   // pagination
-  const skip = (Number(page) - 1) * Number(limit);
+  const currentPage = Math.max(1, Number(page));
+  const pageSize = Math.max(1, Number(limit));
+  const skip = (currentPage - 1) * pageSize;
 
   // sorting
   const sort: any = { [String(sort_by)]: order === "asc" ? 1 : -1 };
 
-  console.log("filters:", filters);
-
   const products = await Product.find(filters)
-   .populate("brand category")
-    .sort({ [sort_by as string]: order === "desc" ? -1 : 1 })
-    .limit(Number(limit))
-    .skip((Number(page) - 1) * Number(limit));
-  // .populate("brand category")
-  //   .skip(skip)
-  //   .limit(Number(limit))
-  //   .sort(sort);
+    .populate("brand category")
+    .skip(skip)
+    .limit(pageSize)
+    .sort(sort);
 
 
   const total = await Product.countDocuments(filters);
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const hasNextPage = currentPage < totalPages;
 
   res.status(200).json({
     success: true,
     data: products,
     pagination: {
       total,
-      page: Number(page),
-      limit: Number(limit),
-      totalPages: Math.ceil(total / Number(limit)),
+      page: currentPage,
+      limit: pageSize,
+      totalPages,
+      hasNextPage,
     },
   });
 });
