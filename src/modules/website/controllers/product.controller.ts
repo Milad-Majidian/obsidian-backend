@@ -23,8 +23,7 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     price_max,
     page = 1,
     limit = 30,
-    sort_by = "createdAt",
-    order = "desc",
+    sort = "newest", // newest, price_low, price_high, name_asc, name_desc
   } = req.query;
 
   const filters: any = {};
@@ -60,14 +59,36 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   const pageSize = Math.max(1, Number(limit));
   const skip = (currentPage - 1) * pageSize;
 
-  // sorting
-  const sort: any = { [String(sort_by)]: order === "asc" ? 1 : -1 };
+  // sorting - support frontend-friendly sort options
+  let sortOptions: any = { createdAt: -1 }; // default: newest first
+  
+  switch (sort) {
+    case "price_low":
+      sortOptions = { price: 1 }; // lowest price first
+      break;
+    case "price_high":
+      sortOptions = { price: -1 }; // highest price first
+      break;
+    case "name_asc":
+      sortOptions = { name: 1 }; // A-Z
+      break;
+    case "name_desc":
+      sortOptions = { name: -1 }; // Z-A
+      break;
+    case "oldest":
+      sortOptions = { createdAt: 1 }; // oldest first
+      break;
+    case "newest":
+    default:
+      sortOptions = { createdAt: -1 }; // newest first
+      break;
+  }
 
   const products = await Product.find(filters)
     .populate("brand category")
     .skip(skip)
     .limit(pageSize)
-    .sort(sort);
+    .sort(sortOptions);
 
 
   const total = await Product.countDocuments(filters);
