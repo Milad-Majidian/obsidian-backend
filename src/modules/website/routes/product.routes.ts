@@ -6,9 +6,9 @@ const router = express.Router()
 
 router.post('/', productController.addProduct)
 router.get('/', productController.getProducts);
-router.get('/:id', productController.getProductById)
-// Avoid colliding with paginated list route
+// Specific routes must come before parameterized routes
 router.get('/all', productController.getAllProducts)
+router.get('/:id', productController.getProductById)
 router.put('/:id', productController.updateProduct)
 router.delete('/:id', productController.deleteProduct)
 

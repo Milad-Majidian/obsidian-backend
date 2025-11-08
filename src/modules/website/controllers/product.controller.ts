@@ -113,7 +113,7 @@ export const getProductById = asyncHandler(async (req: Request, res: Response) =
     if (!productId) {
         throw new ApiError(400, 'Product ID is required');
     }
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).populate('brand category');
     if (!product) {
         throw new ApiError(404, 'Product not found');
     }
@@ -121,7 +121,7 @@ export const getProductById = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const getAllProducts = asyncHandler(async (req: Request, res: Response) => {
-    const products = await Product.find();
+    const products = await Product.find().populate('brand category');
     res.status(200).json({ success: true, data: products });
 });
 
