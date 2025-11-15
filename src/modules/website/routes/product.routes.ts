@@ -1,15 +1,47 @@
 
 import express from 'express'
-import * as productController  from '@/modules/website/controllers/product.controller'
+import * as productController from '@/modules/website/controllers/product.controller'
+import * as productValidator from '@/modules/website/validators/product.validator'
 
 const router = express.Router()
 
-router.post('/', productController.addProduct)
-router.get('/', productController.getProducts);
-// Specific routes must come before parameterized routes
+// Create product
+router.post(
+  '/', 
+  productValidator.validateCreateProduct,
+  productController.addProduct
+)
+
+// Get products with filters and pagination
+router.get(
+  '/', 
+  productValidator.validateGetProductsQuery,
+  productController.getProducts
+)
+
+// Get all products without pagination (must come before /:id)
 router.get('/all', productController.getAllProducts)
-router.get('/:id', productController.getProductById)
-router.put('/:id', productController.updateProduct)
-router.delete('/:id', productController.deleteProduct)
+
+// Get single product by ID
+router.get(
+  '/:id', 
+  productValidator.validateProductId,
+  productController.getProductById
+)
+
+// Update product
+router.put(
+  '/:id', 
+  productValidator.validateProductId,
+  productValidator.validateUpdateProduct,
+  productController.updateProduct
+)
+
+// Delete product
+router.delete(
+  '/:id', 
+  productValidator.validateProductId,
+  productController.deleteProduct
+)
 
 export default router
