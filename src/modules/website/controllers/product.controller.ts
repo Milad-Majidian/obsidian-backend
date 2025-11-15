@@ -1,151 +1,85 @@
-import {Request , Response} from 'express';
+import { Request, Response } from 'express';
 import { ApiError } from '@/modules/shared/utils/apiError';
 import { asyncHandler } from '@/modules/shared/utils/asyncHandler';
-import Product , { IProduct } from '@/modules/shared/models/product.model';
-import Category from '@/modules/shared/models/category.model';
-import Brand from '@/modules/shared/models/brand.model';
+import * as productService from '../services/product.service';
 
+// Create a new product
 export const addProduct = asyncHandler(async (req: Request, res: Response) => {
-    const productData = req.body;
-    console.log('Creating product with data:', productData);
-    const  product = await Product.create(productData);
-    if(!product) {
-        throw new ApiError(400, 'Product creation failed');
-    }
-    res.status(201).json({ success: true, data: product });
+  const product = await productService.createProduct(req.body);
+  res.status(201).json({ success: true, data: product });
 });
 
+// Get products with filters, pagination, and sorting
 export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   const {
-    category, // slug
+    category,
     brand,
     price_min,
     price_max,
+    search,
     page = 1,
     limit = 30,
-    sort = "newest", // newest, price_low, price_high, name_asc, name_desc
+    sort = "newest",
   } = req.query;
 
-  const filters: any = {};
+  const filters: productService.ProductFilters = {
+    category: category as string | undefined,
+    brand: brand as string | undefined,
+    price_min: price_min ? Number(price_min) : undefined,
+    price_max: price_max ? Number(price_max) : undefined,
+    search: search as string | undefined,
+  };
 
-  // find category by slug or category name then add category id to filters)
-  
-  if (category) {
-    const cat = await Category.findOne({ 
-        name : category
-    });
-    if (!cat) throw new ApiError(404, "Category not found");
-    filters.category = cat._id;
-  }
-  // find brand by brand name then add brand id to filters
-    
-  if(brand){
-    const brandDoc = await Brand.findOne({ 
-      name: brand
-    })
-    if(!brandDoc) throw new ApiError(404,"Brand not found")
-    filters.brand = brandDoc._id;
-  }
+  const options: productService.PaginationOptions = {
+    page: Number(page),
+    limit: Number(limit),
+    sort: sort as string,
+  };
 
-  // price filter
-  if (price_min || price_max) {
-    filters.price = {};
-    if (price_min) filters.price.$gte = Number(price_min);
-    if (price_max) filters.price.$lte = Number(price_max);
-  }
-
-  // pagination
-  const currentPage = Math.max(1, Number(page));
-  const pageSize = Math.max(1, Number(limit));
-  const skip = (currentPage - 1) * pageSize;
-
-  // sorting - support frontend-friendly sort options
-  let sortOptions: any = { createdAt: -1 }; // default: newest first
-  
-  switch (sort) {
-    case "price_low":
-      sortOptions = { price: 1 }; // lowest price first
-      break;
-    case "price_high":
-      sortOptions = { price: -1 }; // highest price first
-      break;
-    case "name_asc":
-      sortOptions = { name: 1 }; // A-Z
-      break;
-    case "name_desc":
-      sortOptions = { name: -1 }; // Z-A
-      break;
-    case "oldest":
-      sortOptions = { createdAt: 1 }; // oldest first
-      break;
-    case "newest":
-    default:
-      sortOptions = { createdAt: -1 }; // newest first
-      break;
-  }
-
-  const products = await Product.find(filters)
-    .populate("brand category")
-    .skip(skip)
-    .limit(pageSize)
-    .sort(sortOptions);
-
-
-  const total = await Product.countDocuments(filters);
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  const hasNextPage = currentPage < totalPages;
+  const result = await productService.getProducts(filters, options);
 
   res.status(200).json({
     success: true,
-    data: products,
-    pagination: {
-      total,
-      page: currentPage,
-      limit: pageSize,
-      totalPages,
-      hasNextPage,
-    },
+    data: result.products,
+    pagination: result.pagination,
   });
 });
 
+// Get a single product by ID
 export const getProductById = asyncHandler(async (req: Request, res: Response) => {
-    const productId = req.params.id;
-    if (!productId) {
-        throw new ApiError(400, 'Product ID is required');
-    }
-    const product = await Product.findById(productId).populate('brand category');
-    if (!product) {
-        throw new ApiError(404, 'Product not found');
-    }
-    res.status(200).json({ success: true, data: product });
+  const product = await productService.getProductById(req.params.id);
+  
+  if (!product) {
+    throw new ApiError(404, 'Product not found');
+  }
+  
+  res.status(200).json({ success: true, data: product });
 });
 
+// Get all products without pagination
 export const getAllProducts = asyncHandler(async (req: Request, res: Response) => {
-    const products = await Product.find().populate('brand category');
-    res.status(200).json({ success: true, data: products });
+  const products = await productService.getAllProducts();
+  res.status(200).json({ success: true, data: products });
 });
 
+// Update a product
 export const updateProduct = asyncHandler(async (req: Request, res: Response) => {
-    const productId = req.params.id;
-    const productData: Partial<IProduct> = req.body;
-    if (!productId) {
-        throw new ApiError(400, 'Product ID is required');
-    }
-    const updatedProduct = await Product.findByIdAndUpdate(productId, productData, { new: true });
-    if (!updatedProduct) {
-        throw new ApiError(404, 'Product not found');
-    }
-    res.status(200).json({ success: true, data: updatedProduct });
+  const updatedProduct = await productService.updateProduct(req.params.id, req.body);
+  
+  if (!updatedProduct) {
+    throw new ApiError(404, 'Product not found');
+  }
+  
+  res.status(200).json({ success: true, data: updatedProduct });
 });
 
+// Delete a product
 export const deleteProduct = asyncHandler(async (req: Request, res: Response) => {
-    const productId = req.params.id;
-    if (!productId) {
-        throw new ApiError(400, 'Product ID is required');
-    }
-    const deletedProduct = await Product.findByIdAndDelete(productId);
-    if (!deletedProduct) {
-        throw new ApiError(404, 'Product not found');
-    }
-    res.status(200).json({ success: true, message: 'Product deleted successfully' });
+  const deletedProduct = await productService.deleteProduct(req.params.id);
+  
+  if (!deletedProduct) {
+    throw new ApiError(404, 'Product not found');
+  }
+  
+  res.status(200).json({ success: true, message: 'Product deleted successfully' });
 });
