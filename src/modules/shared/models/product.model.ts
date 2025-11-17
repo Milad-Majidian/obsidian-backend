@@ -1,25 +1,5 @@
-import mongoose , { Schema, Document, Types } from "mongoose";
-import { ICategory } from "./category.model";
-import { IBrand } from "./brand.model";
-
-
-export interface IProduct extends Document {
-    name: string;
-    images: string[];  // Multiple images support
-    price: number;
-    compareAtPrice?: number;  // Original price for showing discounts
-    brand: Types.ObjectId | IBrand;
-    category: Types.ObjectId | ICategory;
-    description: string;
-    stock: number;  // Inventory count
-    inStock: boolean;  // Quick availability check
-    sku?: string;  // Stock Keeping Unit
-    tags?: string[];  // For additional categorization/search
-    featured?: boolean;  // For highlighting special products
-    rating?: number;  // Average rating (0-5)
-    reviewCount?: number;  // Number of reviews
-}
-
+import { IProduct } from "@/modules/website/types/product.type";
+import mongoose , { Schema } from "mongoose";
 
 const ProductSchema = new Schema<IProduct>({
     name: { 
