@@ -1,11 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-import mongoose, { Schema, Document } from "mongoose";
-
-export interface ICategory extends Document {
-    name: string;
-    description?: string;
-    image: string;
-}
+import { ICategory } from "@/modules/website/types/category.type";
+import mongoose, { Schema } from "mongoose";
 
 const CategorySchema = new Schema<ICategory>({
     name: { type: String, required: true, unique: true },
