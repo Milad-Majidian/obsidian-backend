@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { ApiError } from '@/modules/shared/utils/apiError';
 import { asyncHandler } from '@/modules/shared/utils/asyncHandler';
 import * as productService from '../services/product.service';
+import { PaginationOptions, ProductFilters } from "../types/product.type";
+
 
 // Create a new product
 export const addProduct = asyncHandler(async (req: Request, res: Response) => {
@@ -22,7 +24,7 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     sort = "newest",
   } = req.query;
 
-  const filters: productService.ProductFilters = {
+  const filters: ProductFilters = {
     category: category as string | undefined,
     brand: brand as string | undefined,
     price_min: price_min ? Number(price_min) : undefined,
@@ -30,7 +32,7 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     search: search as string | undefined,
   };
 
-  const options: productService.PaginationOptions = {
+  const options: PaginationOptions = {
     page: Number(page),
     limit: Number(limit),
     sort: sort as string,
