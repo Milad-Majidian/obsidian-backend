@@ -1,32 +1,8 @@
-import Product, {IProduct} from "../../shared/models/product.model";
+import Product from "../../shared/models/product.model";
 import Category from "../../shared/models/category.model";
 import Brand from "../../shared/models/brand.model";
 import { FilterQuery } from "mongoose";
-
-export interface ProductFilters {
-  category?: string;
-  brand?: string;
-  price_min?: number;
-  price_max?: number;
-  search?: string;
-}
-
-export interface PaginationOptions {
-  page: number;
-  limit: number;
-  sort?: string;
-}
-
-export interface PaginatedProducts {
-  products: IProduct[];
-  pagination: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-    hasNextPage: boolean;
-  };
-}
+import { IProduct, PaginatedProducts, PaginationOptions, ProductFilters } from "../types/product.type";
 
 // Create a new product
 export const createProduct = async (data: Partial<IProduct>): Promise<IProduct> => {
