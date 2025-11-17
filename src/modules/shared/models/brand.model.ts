@@ -1,12 +1,6 @@
 
-import mongoose , { Document, Schema } from "mongoose";
-
-export interface IBrand extends Document {
-    name: string;
-    description: string;
-    image: string;
-    categories: mongoose.Types.ObjectId[];
-}
+import mongoose , { Schema } from "mongoose";
+import { IBrand } from "@/modules/website/types/brand.type";
 
 const BrandSchema = new Schema<IBrand>({
     name: { type: String, required: true },
