@@ -6,7 +6,8 @@
     "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
     "build": "tsc",
     "start": "node -r tsconfig-paths/register dist/index.js",
-    "seed": "ts-node scripts/seed.ts"
+    "seed": "ts-node scripts/seed.ts",
+    "seedAdmin": "ts-node scripts/createAdmin.ts" 
   },
   "keywords": [],
   "author": "",
