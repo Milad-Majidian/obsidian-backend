@@ -5,6 +5,8 @@ import productRoutes from './website/routes/product.routes';
 import categoryRoutes from './website/routes/category.routes'
 import brandRoutes from "./website/routes/brand.routes"
 import authRoutes from './website/routes/auth.routes';
+import dashboardAuthRoutes from './dashboard/routes/auth.routes';
+
 
 var cookieParser = require('cookie-parser')
 
@@ -21,6 +23,7 @@ app.use("/categories",categoryRoutes)
 app.use("/brands",brandRoutes)
 app.use("/products", productRoutes);
 app.use('/auth', authRoutes);
+app.use('/dashboard/auth', dashboardAuthRoutes);
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mydatabase';
 
