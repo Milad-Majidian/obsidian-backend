@@ -33,6 +33,10 @@ export const getProducts = async (
     }
   }
 
+  if(filters.price_min !== undefined && filters.price_max !== undefined && filters.price_min > filters.price_max) {
+    throw new Error("Minimum price cannot be greater than maximum price.");
+  }
+
   // Price range filter
   if (filters.price_min !== undefined || filters.price_max !== undefined) {
     query.price = {};
