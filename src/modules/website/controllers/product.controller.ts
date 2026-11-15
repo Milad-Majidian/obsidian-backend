@@ -85,3 +85,22 @@ export const deleteProduct = asyncHandler(async (req: Request, res: Response) =>
   
   res.status(200).json({ success: true, message: 'Product deleted successfully' });
 });
+
+ // rating a product
+  export const rateProduct = asyncHandler(async (req: Request, res: Response) => {
+    const { productId, rating } = req.body;
+    const userId = req.user?.id; // Assuming you have user authentication and the user ID is available in the request object
+  
+    if (!userId) {
+      throw new ApiError(401, 'User not authenticated');
+    }
+  
+    const updatedProduct = await productService.rateProduct(productId, userId, rating);
+  
+    if (!updatedProduct) {
+      throw new ApiError(404, 'Product not found');
+    }
+  
+    res.status(200).json({ success: true, data: updatedProduct });
+  });
+
