@@ -134,6 +134,15 @@ export const deleteProduct = async (id: string): Promise<IProduct | null> => {
   return await Product.findByIdAndDelete(id);
 };
 
+export default {
+  createProduct,
+  getProducts,
+  getProductById,
+  getAllProducts,
+  updateProduct,
+  deleteProduct
+};
+
 
 // class ProductService {
 //     async addProduct(productData: IProduct): Promise<IProduct> {
