@@ -18,7 +18,7 @@ export const register = async (req: Request, res: Response) => {
     const user = await User.create({ email, password: hashedPassword });
 
     const accessToken = generateAccessToken(user.id);
-    const refreshToken = generateRefreshToken(user.id);
+    // const refreshToken = generateRefreshToken(user.id);
     return res.status(201).json({
       success: true,
       user: {
@@ -27,7 +27,6 @@ export const register = async (req: Request, res: Response) => {
       },
       tokens: {
         accessToken,
-        refreshToken,
       },
     });
   } catch (error) {
