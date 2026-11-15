@@ -7,7 +7,7 @@ const dashboardAuthRoutes = Router()
 dashboardAuthRoutes.post('/login', authController.login)
 
 // Refresh token route
-dashboardAuthRoutes.post('/refresh-token', authController.refreshToken)
+dashboardAuthRoutes.post('/refresh', authController.refreshToken)
 
 // Logout route
 dashboardAuthRoutes.post('/logout', authController.logout)   
