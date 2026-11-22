@@ -58,3 +58,15 @@ export const deleteAgency = asyncHandler(async (req: Request, res: Response) => 
     }
     res.status(200).json({ success: true, message: 'Agency deleted successfully' });
 });
+
+export const getAgencyById = asyncHandler(async (req: Request, res: Response) => {
+    const agencyId = req.params.id;
+    if (!agencyId) {
+        throw new ApiError(400, 'Agency ID is required');
+    }
+    const agency = await AgencyModel.findById(agencyId);    
+    if (!agency) {
+        throw new ApiError(404, 'Agency not found');
+    }
+    res.status(200).json({ success: true, data: agency });
+});
