@@ -44,6 +44,18 @@ export const updateCategory = asyncHandler(async (req: Request, res: Response) =
     res.status(200).json({ success: true, data: updatedCategory });
 });
 
+export const getCategoryById = asyncHandler(async (req: Request, res: Response) => {
+    const categoryId = req.params.id;
+    if (!categoryId) {
+        throw new ApiError(400, 'Category ID is required');
+    }
+    const category = await Category.findById(categoryId);
+    if (!category) {
+        throw new ApiError(404, 'Category not found');
+    }
+    res.status(200).json({ success: true, data: category });
+});
+
 export const deleteCategory = asyncHandler(async (req: Request, res: Response) => {
     const categoryId = req.params.id;   
     if (!categoryId) {
