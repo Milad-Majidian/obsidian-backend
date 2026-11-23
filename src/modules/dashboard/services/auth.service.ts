@@ -52,6 +52,22 @@ export const authService = {
         } catch (error) {
             throw new Error('Invalid refresh token');
         }
+    },
+
+    async logout(token: string): Promise<void> {
+        // In a real application, you would store the refresh token in a database or cache and mark it as invalidated.
+        // For this example, we'll just simulate the logout process.
+        try {
+            const decoded = jwt.verify(token, REFRESH_TOKEN_SECRET as string) as JwtPayload;
+            const user = await User.findById(decoded.userId);
+            if (!user) {
+                throw new Error('User not found');
+            }
+            // Here you would remove the refresh token from your storage (e.g., database or cache)
+            // For example: await RefreshTokenModel.deleteOne({ token });
+        } catch (error) {
+            throw new Error('Invalid refresh token');
+        }
     }
 }
 
