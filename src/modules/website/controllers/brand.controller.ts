@@ -15,3 +15,9 @@ export const getAllBrands = asyncHandler(async (req: Request, res: Response) => 
     res.status(200).json({ success: true, data: brands });
 })
 
+export const getBrandById = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const brand = await Brand.findById(id);
+    if(!brand) throw new ApiError(404, 'Brand not found');
+    res.status(200).json({ success: true, data: brand });
+})
